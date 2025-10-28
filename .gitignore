@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+venv/
+.scatlas_db
+scatlas.db
+data/uploads/*.h5ad
+data/uploads/processed_*.h5ad
+.idea/
+.vscode/
+.DS_Store
