@@ -5,6 +5,8 @@ from uuid import uuid4
 from app.database import SessionLocal
 from app.tables import Dataset
 from app.schemas import DatasetCreate, DatasetOut
+from app.utils.file_utils import save_uploaded_file   # <-- Add this line
+
 
 router = APIRouter(prefix="/upload", tags=["upload"])
 
@@ -19,25 +21,35 @@ def get_db():
         db.close()
 
 @router.post("/", response_model=DatasetOut)
-async def upload_dataset(file: UploadFile = File(...), name: str = None, metadata: str = None, db: Session = Depends(get_db)):
+async def upload_dataset(
+    file: UploadFile = File(...),
+    name: str = None,
+    metadata: str = None,
+    db: Session = Depends(get_db)
+):
     if not name:
         raise HTTPException(status_code=400, detail="Name is required")
-    ext = file.filename.split(".")[-1].lower()
-    if ext not in {"h5ad", "csv", "loom", "mtx"}:
-        raise HTTPException(status_code=400, detail="Unsupported file type")
-    uid = f"{uuid4().hex}.{ext}"
-    path = os.path.join(UPLOAD_DIR, uid)
-    with open(path, "wb") as f:
-        content = await file.read()
-        f.write(content)
 
+    allowed_exts = {"h5ad", "csv", "loom", "mtx"}
+    ext = file.filename.split(".")[-1].lower()
+    if ext not in allowed_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported file type. Allowed: {allowed_exts}")
+
+    # Save the file and get the unique filename
+    try:
+        unique_name, file_path = await save_uploaded_file(file)  # <- returns unique_name
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save file: {e}")
+
+    # Create dataset entry
     ds = Dataset(
         name=name,
-        filename=uid,
+        filename=unique_name,  # <- now defined
         file_type=ext,
-        metadata=metadata or ""
+        meta_info=metadata or ""
     )
     db.add(ds)
     db.commit()
     db.refresh(ds)
+
     return ds
