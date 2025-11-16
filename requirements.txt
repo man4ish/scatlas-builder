@@ -10,3 +10,8 @@ numpy==1.26.0
 streamlit==1.23.1
 matplotlib==3.8.2
 requests==2.31.0
+
+# Hugging Face / LLaMA 3
+torch>=2.1.0
+transformers>=4.35.0
+sentencepiece>=0.1.99  # sometimes needed for tokenizers
