@@ -29,3 +29,4 @@ SessionLocal = sessionmaker(
 
 # Base class for ORM models
 Base = declarative_base()
+
