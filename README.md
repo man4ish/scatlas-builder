@@ -50,7 +50,7 @@ It integrates widely used single-cell analysis tools (Scanpy, CellTypist, pySCEN
 
 ## Screenshots
 
-![UMAP Example](https://via.placeholder.com/600x400?text=UMAP+Plot+Example)
+[https://github.com/man4ish/scatlas-builder/blob/main/docs/umap_example.png](https://github.com/man4ish/scatlas-builder/blob/main/docs/umap_example.png)
 *Streamlit UMAP visualization example*
 
 ---
