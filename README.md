@@ -1,32 +1,37 @@
-
 # Single-Cell Atlas Builder
 
-**Single-Cell Atlas Builder** is an open-source platform for building, analyzing, and visualizing single-cell RNA-seq atlases.
-It integrates widely used single-cell analysis tools (Scanpy, CellTypist, pySCENIC) with a FastAPI backend, SQLAlchemy-managed database, and an optional Streamlit frontend for interactive visualization.
+[![Python](https://img.shields.io/badge/python-3.10+-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
+
+**Single-Cell Atlas Builder** is an open-source platform for building, analyzing, and visualizing single-cell RNA-seq atlases.  
+It integrates widely used single-cell analysis tools (Scanpy, CellTypist, pySCENIC) with a FastAPI backend, SQLAlchemy-managed database, and an optional Streamlit frontend for interactive visualization. LLaMA 3 is used for cluster/pathway summarization.
 
 ---
 
 ## System Architecture
 
 ```
+
 ───────────────────────────────┐
 │           Client UI          │
 │ (Streamlit / Dash / Swagger) │
 └──────────────┬───────────────┘
-               │ REST API
+│ REST API
 ┌──────────────▼───────────────┐
 │         FastAPI Server       │
 │   /upload  /integrate  /visualize  │
 └──────────────┬───────────────┘
-               │ SQLAlchemy ORM
+│ SQLAlchemy ORM
 ┌──────────────▼───────────────┐
 │     PostgreSQL / SQLite      │
 └──────────────┬───────────────┘
-               │
+│
 ┌──────────────▼───────────────┐
 │  Analysis Engine (Scanpy,    │
 │  CellTypist, LLaMA 3, pySCENIC) │
 └───────────────────────────────┘
+
 ```
 
 ---
@@ -43,9 +48,17 @@ It integrates widely used single-cell analysis tools (Scanpy, CellTypist, pySCEN
 
 ---
 
+## Screenshots
+
+![UMAP Example](https://via.placeholder.com/600x400?text=UMAP+Plot+Example)
+*Streamlit UMAP visualization example*
+
+---
+
 ## Repository Structure
 
 ```
+
 scatlas-builder/
 ├── app/
 │   ├── main.py             # FastAPI entrypoint
@@ -60,7 +73,8 @@ scatlas-builder/
 ├── docker/                 # Dockerfile
 ├── requirements.txt
 └── README.md
-```
+
+````
 
 ---
 
@@ -78,7 +92,7 @@ scatlas-builder/
 git clone https://github.com/yourusername/scatlas-builder.git
 cd scatlas-builder
 pip install -r requirements.txt
-```
+````
 
 ### Running Locally
 
@@ -111,14 +125,26 @@ docker run -p 8000:8000 scatlas-builder
 ## Example Workflow
 
 ```python
-from app.services import preprocessing, clustering
+from app.services import preprocessing, clustering, llm_summary
 import scanpy as sc
 
+# Load dataset
 adata = preprocessing.load_input("uploads/sample.h5ad")
+
+# Preprocessing
 adata = preprocessing.run_qc_and_normalize(adata)
 adata = preprocessing.run_pca_umap(adata)
+
+# Clustering
 adata = clustering.run_leiden(adata)
+
+# Plot UMAP
 sc.pl.umap(adata, color='leiden')
+
+# Optional LLaMA 3 summarization
+markers = {'0': ['GeneA', 'GeneB'], '1': ['GeneC', 'GeneD']}
+summary = llm_summary.summarize_cluster_markers(markers)
+print(summary)
 ```
 
 ---
@@ -139,8 +165,5 @@ If you use this project, please cite:
 
 ```
 Manish Kumar, Single-Cell Atlas Builder, 2025.  
-GitHub: https://github.com/yourusername/scatlas-builder
-```
-
-
+GitHub: https://github.com/man4ish/scatlas-builder
 
