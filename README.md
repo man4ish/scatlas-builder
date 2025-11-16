@@ -13,24 +13,29 @@ It integrates widely used single-cell analysis tools (Scanpy, CellTypist, pySCEN
 
 ```
 
-───────────────────────────────┐
-│           Client UI          │
-│ (Streamlit / Dash / Swagger) │
-└──────────────┬───────────────┘
-│ REST API
-┌──────────────▼───────────────┐
-│         FastAPI Server       │
-│   /upload  /integrate  /visualize  │
-└──────────────┬───────────────┘
-│ SQLAlchemy ORM
-┌──────────────▼───────────────┐
-│     PostgreSQL / SQLite      │
-└──────────────┬───────────────┘
-│
-┌──────────────▼───────────────┐
-│  Analysis Engine (Scanpy,    │
-│  CellTypist, LLaMA 3, pySCENIC) │
-└───────────────────────────────┘
+                    ┌────────────────────────┐
+                    │      Client UI         │
+                    │ (Streamlit / Dash /   │
+                    │       Swagger)        │
+                    └────────────┬──────────┘
+                                 │ REST API
+                    ┌────────────▼──────────┐
+                    │     FastAPI Server     │
+                    │ /upload /integrate /  │
+                    │      /visualize        │
+                    └────────────┬──────────┘
+                                 │ ORM
+                    ┌────────────▼──────────┐
+                    │   SQLAlchemy ORM       │
+                    │ PostgreSQL / SQLite    │
+                    └────────────┬──────────┘
+                                 │ Data
+                    ┌────────────▼──────────┐
+                    │   Analysis Engine      │
+                    │ Scanpy, CellTypist,    │
+                    │   LLaMA 3, pySCENIC    │
+                    └───────────────────────┘
+
 
 ```
 
